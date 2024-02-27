@@ -141,32 +141,22 @@ public class Festival {
 
     //Añadido al proyecto de partida
     //formatea la fecha del festival en el formato necesario para el toString
-
     private String formatearFecha() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMM yyyy");
         StringBuilder retorno = new StringBuilder();
-
-        if(duracion == 1){
-            String fechaStr = FestivalesIO.ConversionFecha.parsearFecha(fechaInicio.toString(), "dd MMM yyyy").toString();
-            retorno.append(fechaStr);
+        retorno.append(fechaInicio.format(formatter));
+        if (duracion > 1) {
+            retorno.append(" - ").append(calcularFechaFin().format(formatter));
         }
-        else{
-            //Calculamos la fecha de inicio en formato dd MMM.
-            retorno.append(FestivalesIO.ConversionFecha.parsearFecha(fechaInicio.toString(), "dd MMM").toString());
-            //Ahora calulamos la fecha de fin en formato dd MMM. yyyy
-            retorno.append(" - ");
-            retorno.append(FestivalesIO.ConversionFecha.parsearFecha(calcularFechaFin().toString(), "dd MMM yyyy").toString());
-        }
-
-        //Ahora calculamos los días que quedan para el inicio, o si está en curso, o si ha concluido
+        //ahora calculamos los días que quedan para el inicio, o si está en curso, o si ha concluido
         if (haConcluido()) {
-            retorno.append(" (concluido) ");
+            retorno.append(" (concluido)");
         } else if (enCurso()) {
-            retorno.append(" (ON) ");
+            retorno.append(" (ON)");
         } else {
             long diasFaltan = diasParaInicio();
             retorno.append(" (quedan ").append(diasFaltan).append(" días)");
         }
-
         return retorno.toString();
     }
 
@@ -178,22 +168,13 @@ public class Festival {
      */
     @Override
     public String toString() {
-        String estado = haConcluido() ? "(concluido)" : "(quedan " + ChronoUnit.DAYS.between(LocalDate.now(), fechaInicio.plusDays(duracion)) + " días)";
         StringBuilder sb = new StringBuilder();
-        sb.append(nombre).append(" ")
-                .append(estilos).append("\n")
+        sb.append(nombre).append(" ").append(estilos).append("\n")
                 .append(lugar).append("\n")
-                .append(fechaInicio.format(DateTimeFormatter.ofPattern("dd MMM yyyy")));
-
-        if (duracion > 1) {
-            sb.append(" - ").append(fechaInicio.plusDays(duracion - 1).format(DateTimeFormatter.ofPattern("dd MMM yyyy")));
-        }
-
-        sb.append(" ").append(estado).append("\n").append("-".repeat(40)).append("\n");
+                .append(formatearFecha())
+                .append("\n").append("-".repeat(40)).append("\n");
         return sb.toString();
     }
-
-
 
 
     /**
