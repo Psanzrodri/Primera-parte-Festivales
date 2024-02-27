@@ -1,5 +1,3 @@
-
-
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Scanner;
@@ -8,7 +6,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 /**
- * La clase contiene mÈodos est·ticos que permiten
+ * La clase contiene m√©odos est√°ticos que permiten
  * cargar la agenda de festivales leyendo los datos desde
  * un fichero
  */
@@ -34,13 +32,13 @@ public class FestivalesIO {
     }
 
     /**
-     * se parsea la lÌnea extrayendo sus datos y creando y
+     * se parsea la l√≠nea extrayendo sus datos y creando y
      * devolviendo un objeto Festival
      * @param lineaFestival los datos de un festival
      * @return el festival creado
      */
     public static Festival parsearLinea(String lineaFestival) {
-        //Troceamos la lÌnea
+        //Troceamos la l√≠nea
         String[] trozos = lineaFestival.split(":");
 
         //Vamos recogiendo cada dato en una variable adecuada para lo que necesitaremos
@@ -49,7 +47,7 @@ public class FestivalesIO {
         LocalDate fecha = ConversionFecha.parsearFecha(trozos[2].trim(),"dd-MM-yyyy");
         int duracion = Integer.parseInt(trozos[3].trim());
 
-        //Preparamos el HashSet de elementos Estilo con los elementos desde la posiciÛn 4 en adelante
+        //Preparamos el HashSet de elementos Estilo con los elementos desde la posici√≥n 4 en adelante
         HashSet<Estilo> setEstilos = new HashSet<>();
         for (int i = 4; i < trozos.length; i++) {
             Estilo e = Estilo.valueOf(trozos[i].trim().toUpperCase());
@@ -63,31 +61,25 @@ public class FestivalesIO {
 
 
     /**
-     * Devuelve el texto recibido capitalizado (primera letra en may˙scula y el resto en min˙sculas)
+     * Devuelve el texto recibido capitalizado (primera letra en may√∫scula y el resto en min√∫sculas)
      * @param texto String: el texto a capitalizar
      * @return String: el texto capitalizado
      */
     private static String capitaliza(String texto) {
         String[] palabras = texto.split("[,.\s]+");
-        String capitalizada = "";
+        StringBuilder capitalizada = new StringBuilder();
         for (String pal : palabras) {
-            String mayus = pal.toUpperCase();
-            String minus = pal.toLowerCase();
-            capitalizada += mayus.charAt(0) + minus.substring(1) + " ";
+            String mayus = pal.substring(0, 1).toUpperCase() + pal.substring(1).toLowerCase();
+            capitalizada.append(mayus).append(" ");
         }
-
-        return capitalizada;
+        return capitalizada.toString().trim();
     }
 
 
-    public class ConversionFecha {
+    public static class ConversionFecha {
         public static LocalDate parsearFecha(String fecha, String formato) {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern(formato);
             return LocalDate.parse(fecha, formatter);
         }
-        //LocalDate fecha = parsearFecha(trozos[2].trim(), "dd-MM-yyyy");
     }
-
-
-
 }
